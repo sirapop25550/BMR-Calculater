@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>คำนวณ BMR / TDEE - โทนม่วงเว็บโรงพยาบาล</title>
+
+<style>
+    body {
+        font-family: 'Prompt', sans-serif;
+        background: #faf7ff;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 650px;
+        margin: auto;
+    }
+
+    .title {
+        color: #5a2ca0;
+        margin-top: 40px;
+    }
+
+    .card {
+        background: white;
+        padding: 25px;
+        margin-top: 15px;
+        border-radius: 18px;
+        box-shadow: 0 4px 12px rgb(0 0 0 / 8%);
+    }
+
+    label {
+        display: block;
+        margin-top: 12px;
+        font-weight: 600;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #d8c9ff;
+        border-radius: 10px;
+        margin-top: 6px;
+        font-size: 16px;
+    }
+
+    button {
+        width: 100%;
+        margin-top: 20px;
+        padding: 12px;
+        background: #6b38c7;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 18px;
+        cursor: pointer;
+        transition: 0.25s;
+    }
+
+    button:hover {
+        background: #5a2ca0;
+    }
+
+    .result {
+        margin-top: 20px;
+        padding: 18px;
+        background: #6b38c7;
+        color: white;
+        text-align: center;
+        border-radius: 14px;
+        font-size: 22px;
+    }
+
+    .note {
+        font-size: 13px;
+        margin-top: 15px;
+        opacity: 0.7;
+    }
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <!-- STEP 1 : BMR -->
+    <h2 class="title">ขั้นตอนที่ 1 : คำนวณ BMR</h2>
+    <div class="card">
+        <label>เพศ</label>
+        <select id="gender">
+            <option value="male">ชาย</option>
+            <option value="female">หญิง</option>
+        </select>
+
+        <label>อายุ (ปี)</label>
+        <input type="number" id="age">
+
+        <label>น้ำหนัก (kg)</label>
+        <input type="number" id="weight">
+
+        <label>ส่วนสูง (cm)</label>
+        <input type="number" id="height">
+
+        <button onclick="calcBMR()">คำนวณ</button>
+
+        <div class="result" id="bmrResult">ค่า BMR : 0</div>
+    </div>
+
+    <!-- STEP 2 : TDEE -->
+    <h2 class="title">ขั้นตอนที่ 2 : คำนวณ TDEE</h2>
+    <div class="card">
+        <label>เลือกกิจกรรม</label>
+        <select id="activity">
+            <option value="1.2">นั่งทำงาน ไม่ออกกำลังกายเลย</option>
+            <option value="1.375">ออกกำลังกายเล็กน้อย 1–3 วัน/สัปดาห์</option>
+            <option value="1.55">ออกกำลังกายปานกลาง 3–5 วัน</option>
+            <option value="1.725">ออกกำลังกายหนัก 6–7 วัน</option>
+            <option value="1.9">ออกกำลังกายหนักมาก ทุกวัน</option>
+        </select>
+
+        <button onclick="calcTDEE()">คำนวณ</button>
+
+        <div class="result" id="tdeeResult">ค่า TDEE : 0</div>
+    </div>
+
+    <!-- STEP 3 : แนะนำแคลอรี่ -->
+    <h2 class="title">ขั้นตอนที่ 3 : ต้องกินกี่แคลดีนะ?</h2>
+    <div class="card">
+        <label>เป้าหมาย : น้ำหนักที่ต้องการ (kg)</label>
+        <input type="number" id="targetWeight">
+
+        <label>จำนวนวัน (ที่ออกกำลังกาย)</label>
+        <input type="number" id="days">
+
+        <button onclick="calcCalories()">คำนวณ</button>
+
+        <div class="result" id="calResult">พลังงานที่แนะนำ : 0 kcal</div>
+        <p class="note">กรณีต้องการเพิ่ม/ลดน้ำหนัก ควรเพิ่ม-ลดประมาณวันละ 500 kcal</p>
+    </div>
+
+</div>
+
+<script>
+    let bmr = 0;
+    let tdee = 0;
+
+    function calcBMR() {
+        const gender = document.getElementById("gender").value;
+        const age = parseFloat(document.getElementById("age").value);
+        const weight = parseFloat(document.getElementById("weight").value);
+        const height = parseFloat(document.getElementById("height").value);
+
+        if (!age || !weight || !height) return;
+
+        if (gender === "male") {
+            bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
+        } else {
+            bmr = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
+        }
+
+        document.getElementById("bmrResult").innerText = "ค่า BMR : " + Math.round(bmr);
+    }
+
+    function calcTDEE() {
+        const activity = parseFloat(document.getElementById("activity").value);
+        tdee = bmr * activity;
+
+        document.getElementById("tdeeResult").innerText = "ค่า TDEE : " + Math.round(tdee);
+    }
+
+    function calcCalories() {
+        const targetWeight = parseFloat(document.getElementById("targetWeight").value);
+        const days = parseFloat(document.getElementById("days").value);
+
+        if (!targetWeight || !days || !tdee) return;
+
+        const currentWeight = parseFloat(document.getElementById("weight").value);
+        const diff = targetWeight - currentWeight;
+
+        const kcalPerKg = 7700; 
+        const dailyChange = (diff * kcalPerKg) / days;
+
+        const recommended = tdee + dailyChange;
+
+        document.getElementById("calResult").innerText =
+            "พลังงานที่แนะนำ : " + Math.round(recommended) + " kcal / วัน";
+    }
+</script>
+
+</body>
+</html>
