@@ -1,192 +1,286 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>คำนวณ BMR / TDEE - โทนม่วงเว็บโรงพยาบาล</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BMR / TDEE Calculator</title>
 
-<style>
+  <style>
     body {
-        font-family: 'Prompt', sans-serif;
-        background: #faf7ff;
-        margin: 0;
-        padding: 20px;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: url("img/604310198_2132171277538953_4932808845628243706_n.jpg")
+        no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h2 {
+      color: #5a3fa3;
+      margin-bottom: 20px;
     }
 
     .container {
-        max-width: 650px;
-        margin: auto;
+      max-width: 1100px;
+      margin: auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      margin-bottom: 30px;
     }
 
-    .title {
-        color: #5a2ca0;
-        margin-top: 40px;
-    }
-
-    .card {
-        background: white;
-        padding: 25px;
-        margin-top: 15px;
-        border-radius: 18px;
-        box-shadow: 0 4px 12px rgb(0 0 0 / 8%);
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
     }
 
     label {
-        display: block;
-        margin-top: 12px;
-        font-weight: 600;
+      font-weight: 600;
+      font-size: 14px;
     }
 
-    input, select {
-        width: 100%;
-        padding: 10px;
-        border: 2px solid #d8c9ff;
-        border-radius: 10px;
-        margin-top: 6px;
-        font-size: 16px;
+    select, input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 15px;
     }
 
-    button {
-        width: 100%;
-        margin-top: 20px;
-        padding: 12px;
-        background: #6b38c7;
-        color: white;
-        border: none;
-        border-radius: 12px;
-        font-size: 18px;
-        cursor: pointer;
-        transition: 0.25s;
+    .btn {
+      margin-top: 20px;
+      width: 100%;
+      padding: 14px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      background: #cfcfcf;
+      cursor: pointer;
     }
 
-    button:hover {
-        background: #5a2ca0;
-    }
+    .btn:hover { background: #bdbdbd; }
 
     .result {
-        margin-top: 20px;
-        padding: 18px;
-        background: #6b38c7;
-        color: white;
-        text-align: center;
-        border-radius: 14px;
-        font-size: 22px;
+      margin-top: 25px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 15px;
     }
+
+    .box {
+      background: #f3f1f8;
+      padding: 15px;
+      border-radius: 10px;
+      border-left: 6px solid #7b5cd6;
+    }
+
+    .box strong { color: #5a3fa3; }
 
     .note {
-        font-size: 13px;
-        margin-top: 15px;
-        opacity: 0.7;
+      margin-top: 25px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #555;
     }
-</style>
 
+    .footnote {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #777;
+      line-height: 1.6;
+    }
+
+    /* ===== BMI COLORS ===== */
+    .bmi-under { color: #1e88e5; font-weight: bold; }
+    .bmi-normal { color: #2e7d32; font-weight: bold; }
+    .bmi-over { color: #f9a825; font-weight: bold; }
+    .bmi-obese { color: #c62828; font-weight: bold; }
+
+    /* ===== TABLE ===== */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    thead {
+      background: #7b5cd6;
+      color: #fff;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: center;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    tbody tr:nth-child(even) {
+      background: #f8f7fb;
+    }
+  </style>
 </head>
+
 <body>
 
+<!-- ================= CALCULATOR ================= -->
 <div class="container">
+  <h2>เครื่องคำนวณ BMR / TDEE</h2>
 
-    <!-- STEP 1 : BMR -->
-    <h2 class="title">ขั้นตอนที่ 1 : คำนวณ BMR</h2>
-    <div class="card">
-        <label>เพศ</label>
-        <select id="gender">
-            <option value="male">ชาย</option>
-            <option value="female">หญิง</option>
-        </select>
-
-        <label>อายุ (ปี)</label>
-        <input type="number" id="age">
-
-        <label>น้ำหนัก (kg)</label>
-        <input type="number" id="weight">
-
-        <label>ส่วนสูง (cm)</label>
-        <input type="number" id="height">
-
-        <button onclick="calcBMR()">คำนวณ</button>
-
-        <div class="result" id="bmrResult">ค่า BMR : 0</div>
+  <div class="grid">
+    <div>
+      <label>เพศ</label>
+      <select id="gender">
+        <option value="male">ชาย</option>
+        <option value="female">หญิง</option>
+      </select>
     </div>
 
-    <!-- STEP 2 : TDEE -->
-    <h2 class="title">ขั้นตอนที่ 2 : คำนวณ TDEE</h2>
-    <div class="card">
-        <label>เลือกกิจกรรม</label>
-        <select id="activity">
-            <option value="1.2">นั่งทำงาน ไม่ออกกำลังกายเลย</option>
-            <option value="1.375">ออกกำลังกายเล็กน้อย 1–3 วัน/สัปดาห์</option>
-            <option value="1.55">ออกกำลังกายปานกลาง 3–5 วัน</option>
-            <option value="1.725">ออกกำลังกายหนัก 6–7 วัน</option>
-            <option value="1.9">ออกกำลังกายหนักมาก ทุกวัน</option>
-        </select>
-
-        <button onclick="calcTDEE()">คำนวณ</button>
-
-        <div class="result" id="tdeeResult">ค่า TDEE : 0</div>
+    <div>
+      <label>น้ำหนัก (กก.)</label>
+      <input type="number" id="weight" value="61" />
     </div>
 
-    <!-- STEP 3 : แนะนำแคลอรี่ -->
-    <h2 class="title">ขั้นตอนที่ 3 : ต้องกินกี่แคลดีนะ?</h2>
-    <div class="card">
-        <label>เป้าหมาย : น้ำหนักที่ต้องการ (kg)</label>
-        <input type="number" id="targetWeight">
-
-        <label>จำนวนวัน (ที่ออกกำลังกาย)</label>
-        <input type="number" id="days">
-
-        <button onclick="calcCalories()">คำนวณ</button>
-
-        <div class="result" id="calResult">พลังงานที่แนะนำ : 0 kcal</div>
-        <p class="note">กรณีต้องการเพิ่ม/ลดน้ำหนัก ควรเพิ่ม-ลดประมาณวันละ 500 kcal</p>
+    <div>
+      <label>ส่วนสูง (ซม.)</label>
+      <input type="number" id="height" value="170" />
     </div>
 
+    <div>
+      <label>อายุ (ปี)</label>
+      <input type="number" id="age" value="21" />
+    </div>
+  </div>
+
+  <div style="margin-top:15px;">
+    <label>กิจกรรมทางกายที่ทำเป็นประจำ</label>
+    <select id="activity">
+      <option value="1.2">ไม่ออกกำลังกาย</option>
+      <option value="1.375" selected>ออกกำลังกายเล็กน้อย (1–3 วัน/สัปดาห์)</option>
+      <option value="1.55">ออกกำลังกายปานกลาง (3–5 วัน/สัปดาห์)</option>
+      <option value="1.725">ออกกำลังกายหนัก (6–7 วัน/สัปดาห์)</option>
+    </select>
+  </div>
+
+  <button class="btn" onclick="calculate()">คำนวณ</button>
+
+  <div class="result">
+    <div class="box"><strong>BMR :</strong> <span id="bmr">-</span> kcal/วัน</div>
+    <div class="box"><strong>TDEE :</strong> <span id="tdee">-</span> kcal/วัน</div>
+    <div class="box"><strong>คาร์โบไฮเดรต :</strong> <span id="carbGram">-</span> กรัม/วัน</div>
+    <div class="box"><strong>คาร์บต่อวัน :</strong> <span id="rice">-</span> ทัพพี</div>
+    <div class="box"><strong>BMI :</strong> <span id="bmi">-</span></div>
+    <div class="box"><strong>ภาวะน้ำหนัก :</strong> <span id="bmiStatus">-</span></div>
+  </div>
+
+  <div class="note" id="recommend">คำแนะนำ : -</div>
+
+  <div class="footnote">
+    ** คาร์โบไฮเดรต 1 กรัม = 4 แคลอรี่<br>
+    ** คาร์โบไฮเดรต 15 กรัม ≈ ข้าว 1 ทัพพี<br>
+    ** BMI: 23–24.90 อ้วนระดับ 1 | 25–29.90 อ้วนระดับ 2 | ≥30 อ้วนระดับ 3
+  </div>
 </div>
 
+  <!-- ================= TABLE ================= -->
+  <div class="container table-wrapper">
+    <h2>ตารางเผาผลาญแคลอรี่ การใช้แรง 30 นาที</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ชนิดของกิจกรรม</th>
+          <th>ใช้พลังงานต่อ 30 นาที (Kcal)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>เดิน</td><td>150</td></tr>
+        <tr><td>ทำงานบ้าน</td><td>150</td></tr>
+        <tr><td>ซักผ้าด้วยมือ</td><td>120</td></tr>
+        <tr><td>ตัดหญ้า</td><td>250</td></tr>
+        <tr><td>ทำนา</td><td>250</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+     <!-- ================= TABLE ================= -->
+  <div class="container table-wrapper">
+    <h2>ตารางเผาผลาญแคลอรี่ การออกกำลังกาย 30 นาที</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ชนิดของกิจกรรม</th>
+          <th>ใช้พลังงานต่อ 30 นาที (Kcal)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>เต้นแอโรบิค</td><td>300</td></tr>
+        <tr><td>เดินแกว่งแขน</td><td>200</td></tr>
+        <tr><td>ยืดเหยียด</td><td>120</td></tr>
+        <tr><td>ปั่นจักรยาน</td><td>150</td></tr>
+        <tr><td>เดินเร็ว</td><td>250</td></tr>
+      </tbody>
+    </table>
+  </div>
+
 <script>
-    let bmr = 0;
-    let tdee = 0;
+function calculate() {
+  const gender = genderEl.value;
+  const weight = +weightEl.value;
+  const height = +heightEl.value;
+  const age = +ageEl.value;
+  const activity = +activityEl.value;
+}
+</script>
 
-    function calcBMR() {
-        const gender = document.getElementById("gender").value;
-        const age = parseFloat(document.getElementById("age").value);
-        const weight = parseFloat(document.getElementById("weight").value);
-        const height = parseFloat(document.getElementById("height").value);
+<script>
+const genderEl = document.getElementById("gender");
+const weightEl = document.getElementById("weight");
+const heightEl = document.getElementById("height");
+const ageEl = document.getElementById("age");
+const activityEl = document.getElementById("activity");
 
-        if (!age || !weight || !height) return;
+function calculate() {
+  let bmr =
+    genderEl.value === "male"
+      ? 66 + 13.7 * weightEl.value + 5 * heightEl.value - 6.8 * ageEl.value
+      : 655 + 9.6 * weightEl.value + 1.8 * heightEl.value - 4.7 * ageEl.value;
 
-        if (gender === "male") {
-            bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
-        } else {
-            bmr = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
-        }
+  const tdee = bmr * activityEl.value;
+  const carbGram = (tdee * 0.2) / 4;
+  const rice = carbGram / 15;
 
-        document.getElementById("bmrResult").innerText = "ค่า BMR : " + Math.round(bmr);
-    }
+  const bmi = weightEl.value / Math.pow(heightEl.value / 100, 2);
 
-    function calcTDEE() {
-        const activity = parseFloat(document.getElementById("activity").value);
-        tdee = bmr * activity;
+  let bmiStatus = "", bmiClass = "";
+  if (bmi < 18.5) { bmiStatus="ผอม"; bmiClass="bmi-under"; }
+  else if (bmi < 23) { bmiStatus="ปกติ"; bmiClass="bmi-normal"; }
+  else if (bmi <= 24.9) { bmiStatus="อ้วนระดับ 1"; bmiClass="bmi-over"; }
+  else if (bmi <= 29.9) { bmiStatus="อ้วนระดับ 2"; bmiClass="bmi-obese"; }
+  else { bmiStatus="อ้วนระดับ 3"; bmiClass="bmi-obese"; }
 
-        document.getElementById("tdeeResult").innerText = "ค่า TDEE : " + Math.round(tdee);
-    }
+  bmrEl.innerText = bmr.toFixed(0);
+  tdeeEl.innerText = tdee.toFixed(0);
+  carbGramEl.innerText = carbGram.toFixed(1);
+  riceEl.innerText = rice.toFixed(1);
 
-    function calcCalories() {
-        const targetWeight = parseFloat(document.getElementById("targetWeight").value);
-        const days = parseFloat(document.getElementById("days").value);
+  bmiEl.innerText = bmi.toFixed(1);
+  bmiEl.className = bmiClass;
+  bmiStatusEl.innerText = bmiStatus;
 
-        if (!targetWeight || !days || !tdee) return;
+  recommend.innerText = `คำแนะนำ : ควรรับประทานข้าวไม่เกิน ${rice.toFixed(0)} ทัพพี/วัน`;
+}
 
-        const currentWeight = parseFloat(document.getElementById("weight").value);
-        const diff = targetWeight - currentWeight;
-
-        const kcalPerKg = 7700; 
-        const dailyChange = (diff * kcalPerKg) / days;
-
-        const recommended = tdee + dailyChange;
-
-        document.getElementById("calResult").innerText =
-            "พลังงานที่แนะนำ : " + Math.round(recommended) + " kcal / วัน";
-    }
+const bmrEl = document.getElementById("bmr");
+const tdeeEl = document.getElementById("tdee");
+const carbGramEl = document.getElementById("carbGram");
+const riceEl = document.getElementById("rice");
+const bmiEl = document.getElementById("bmi");
+const bmiStatusEl = document.getElementById("bmiStatus");
+const recommend = document.getElementById("recommend");
 </script>
 
 </body>
