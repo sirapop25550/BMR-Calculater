@@ -120,6 +120,64 @@
     tbody tr:nth-child(even) {
       background: #f8f7fb;
     }
+
+    /* ===== POPUP MODAL ===== */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: #fff;
+  width: 90%;
+  max-width: 500px;
+  padding: 25px;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  animation: popup 0.35s ease;
+}
+
+@keyframes popup {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal h3 {
+  margin-top: 0;
+  color: #5a3fa3;
+  text-align: center;
+}
+
+.modal .close {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.modal button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  background: #7b5cd6;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.modal button:hover {
+  background: #684acb;
+}
+
   </style>
 </head>
 
@@ -140,17 +198,17 @@
 
     <div>
       <label>น้ำหนัก (กก.)</label>
-      <input type="number" id="weight" value="61" />
+      <input type="number" id="weight" value="" />
     </div>
 
     <div>
       <label>ส่วนสูง (ซม.)</label>
-      <input type="number" id="height" value="170" />
+      <input type="number" id="height" value="" />
     </div>
 
     <div>
       <label>อายุ (ปี)</label>
-      <input type="number" id="age" value="21" />
+      <input type="number" id="age" value="" />
     </div>
   </div>
 
@@ -170,7 +228,7 @@
     <div class="box"><strong>BMR :</strong> <span id="bmr">-</span> kcal/วัน</div>
     <div class="box"><strong>TDEE :</strong> <span id="tdee">-</span> kcal/วัน</div>
     <div class="box"><strong>คาร์โบไฮเดรต :</strong> <span id="carbGram">-</span> กรัม/วัน</div>
-    <div class="box"><strong>คาร์บต่อวัน :</strong> <span id="rice">-</span> ทัพพี</div>
+    <div class="box"><strong>คาร์บต่อวัน :</strong> <span id="rice">-</span> คาร์บ</div>
     <div class="box"><strong>BMI :</strong> <span id="bmi">-</span></div>
     <div class="box"><strong>ภาวะน้ำหนัก :</strong> <span id="bmiStatus">-</span></div>
   </div>
@@ -182,6 +240,13 @@
     ** คาร์โบไฮเดรต 15 กรัม ≈ ข้าว 1 ทัพพี<br>
     ** BMI: 23–24.90 อ้วนระดับ 1 | 25–29.90 อ้วนระดับ 2 | ≥30 อ้วนระดับ 3
   </div>
+
+  <script>
+function closeModal() {
+  document.getElementById("resultModal").style.display = "none";
+}
+</script>
+
 </div>
 
   <!-- ================= TABLE ================= -->
