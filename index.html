@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BMR / TDEE Calculator</title>
+  <title>เครื่องคำนวณ BMI และคาร์บต่อวัน โรงพยาบาลส่งเสริมสุขภาพตำบลแม่ระกา </title>
 
   <style>
     body {
@@ -17,6 +17,10 @@
 
     h2 {
       color: #5a3fa3;
+      margin-bottom: 20px;
+    }
+    h3 {
+      color: #7b05f9;
       margin-bottom: 20px;
     }
 
@@ -185,8 +189,8 @@
 
 <!-- ================= CALCULATOR ================= -->
 <div class="container">
-  <h2>เครื่องคำนวณ BMR / TDEE</h2>
-
+  <h2>เครื่องคำนวณ BMI และคาร์บต่อวัน</h2>
+  <h3>โรงพยาบาลส่งเสริมสุขภาพตำบลแม่ระกา</h3>
   <div class="grid">
     <div>
       <label>เพศ</label>
@@ -213,10 +217,10 @@
   </div>
 
   <div style="margin-top:15px;">
-    <label>กิจกรรมทางกายที่ทำเป็นประจำ</label>
+    <label>พฤติกรรมการออกกำลังกาย</label>
     <select id="activity">
       <option value="1.2">ไม่ออกกำลังกาย</option>
-      <option value="1.375" selected>ออกกำลังกายเล็กน้อย (1–3 วัน/สัปดาห์)</option>
+      <option value="1.375">ออกกำลังกายเล็กน้อย (1–3 วัน/สัปดาห์)</option>
       <option value="1.55">ออกกำลังกายปานกลาง (3–5 วัน/สัปดาห์)</option>
       <option value="1.725">ออกกำลังกายหนัก (6–7 วัน/สัปดาห์)</option>
     </select>
